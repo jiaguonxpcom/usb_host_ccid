@@ -25,6 +25,8 @@
 #error Please enable USB_HOST_CONFIG_KHCI, USB_HOST_CONFIG_EHCI, USB_HOST_CONFIG_OHCI, or USB_HOST_CONFIG_IP3516HS in file usb_host_config.
 #endif
 
+#include "host_ccid.h"
+
 #include "usb_phy.h"
 /*******************************************************************************
  * Definitions
