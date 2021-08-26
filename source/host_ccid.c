@@ -28,9 +28,9 @@ void USB_CCID_BULK_OUT_Callback(void *param, uint8_t *data, uint32_t dataLength,
     usb_echo("USB_CCID_BULK_OUT_Callback \r\n");
     flag_test = 2;
 }
-void USB_CCID_HID_Callback(void *param, uint8_t *data, uint32_t dataLength, usb_status_t status)
+void USB_CCID_INTERRUPT_IN_Callback(void *param, uint8_t *data, uint32_t dataLength, usb_status_t status)
 {
-    usb_echo("USB_CCID_HID_Callback \r\n");
+    usb_echo("USB_CCID_INTERRUPT_IN_Callback \r\n");
     flag_test = 4;
 }
 void USB_CCID_BULK_IN_Callback(void *param, uint8_t *data, uint32_t dataLength, usb_status_t status)
@@ -60,13 +60,12 @@ void ccid_app_task(void)
     }
     else if(flag_test == 2)
     {
-        USB_HostCdcInterruptRecv(g_cdc.classHandle, buf, 8,USB_CCID_HID_Callback, &g_cdc);
+        USB_HostCdcInterruptRecv(g_cdc.classHandle, buf, 8,USB_CCID_INTERRUPT_IN_Callback, &g_cdc);
     }
     else if(flag_test == 4)
     {
         USB_HostCdcDataRecv(g_cdc.classHandle, buf, 8,USB_CCID_BULK_IN_Callback, &g_cdc);
     }
-
 
     flag_test = NO_ACTION;
 }
