@@ -198,6 +198,7 @@ void usb_host_task(void *hostHandle)
     }
 }
 
+extern void ccid_app_task(void);
 void app_task(void *param)
 {
     APP_init();
@@ -207,9 +208,21 @@ void app_task(void *param)
     }
 
     while (1)
-    {
+    { 
         ccid_app_task();
         USB_HostCdcTask(&g_cdc);
+    }
+}
+
+void ccid_tick_task(void *param)
+{
+    #define DELAY_MS 1000
+    TickType_t xDelay = DELAY_MS / portTICK_PERIOD_MS;
+
+    while(1)
+    {
+         // usb_echo("CCID tick. \r\n");
+         vTaskDelay(xDelay);
     }
 }
 
@@ -219,10 +232,17 @@ int main(void)
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitDebugConsole();
+    
+    usb_echo("CCID host running. \r\n");
 
     if (xTaskCreate(app_task, "app task", 2000L / sizeof(portSTACK_TYPE), NULL, 3, NULL) != pdPASS)
     {
-        usb_echo("create cdc task error\r\n");
+        usb_echo("create app task error\r\n");
+    }
+    
+    if (xTaskCreate(ccid_tick_task, "app ccid_tick_task", 2000L / sizeof(portSTACK_TYPE), NULL, 3, NULL) != pdPASS)
+    {
+        usb_echo("create ccid_tick_task task error\r\n");
     }
     vTaskStartScheduler();
     while (1)

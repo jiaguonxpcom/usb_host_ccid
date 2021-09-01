@@ -653,36 +653,8 @@ void USB_HostCdcTask(void *param)
 }
 
 
-#define USB_HOST_CCID_CLASS_CODE       0x0BU
-#define USB_HOST_CCID_SUBCLASS_CODE    0
 
-#pragma pack(push,1)
-typedef struct 
-{
-    uint8_t  bLength;
-    uint8_t  bDescriptorType;
-    uint16_t bcdCCID;
-    uint8_t  bMaxSlotIndex;
-    uint8_t  bVoltageSupport;
-    uint32_t dwProtocols;
-    uint32_t dwDefaultClock;
-    uint32_t dwMaximumClock;
-    uint8_t  bNumClockSupported;
-    uint32_t dwDataRate;
-    uint32_t dwMaxDataRate;
-    uint8_t  bNumDataRatesSupported;
-    uint32_t dwMaxIFSD;
-    uint32_t dwSynchProtocols;
-    uint32_t dwMechanical;
-    uint32_t dwFeatures;
-    uint32_t dwMaxCCIDMessageLength;
-    uint8_t  bClassGetResponse;
-    uint8_t  bClassEnvelope;
-    uint16_t wLcdLayout;
-    uint8_t  bPinSupport;
-    uint8_t  bMaxCCIDBusySlots;
-} descriptor_smart_card_specific_device_t;
-#pragma pack(pop)
+
 
 
 usb_status_t USB_HostCdcEvent(usb_device_handle deviceHandle,
