@@ -498,6 +498,7 @@ void USB_HostCdcControlCallback(void *param, uint8_t *data, uint32_t dataLength,
  *
  * @param param   the host cdc instance pointer.
  */
+extern void ccid_communication_ready(void);
 void USB_HostCdcTask(void *param)
 {
     cdc_instance_struct_t *cdcInstance = (cdc_instance_struct_t *)param;
@@ -509,12 +510,13 @@ void USB_HostCdcTask(void *param)
         {
             case kStatus_DEV_Idle:
                 break;
+                
             case kStatus_DEV_Attached:
-                // cdcInstance->runState = kUSB_HostCdcRunSetControlInterface;
                 cdcInstance->runState = kUSB_HostCdcRunSetControlInterfaceDone;
                 USB_HostCdcInit(cdcInstance->deviceHandle, &cdcInstance->classHandle);
-                usb_echo("cdc device attached\r\n");
+                usb_echo("ccid device attached\r\n");
                 break;
+                
             case kStatus_DEV_Detached:
                 cdcInstance->deviceState = kStatus_DEV_Idle;
                 cdcInstance->runState    = kUSB_HostCdcRunIdle;
@@ -523,8 +525,9 @@ void USB_HostCdcTask(void *param)
                 cdcInstance->classHandle            = NULL;
                 cdcInstance->controlInterfaceHandle = NULL;
                 cdcInstance->deviceHandle           = NULL;
-                usb_echo("cdc device detached\r\n");
+                usb_echo("ccid device detached\r\n");
                 break;
+                
             default:
                 break;
         }
@@ -596,8 +599,6 @@ void USB_HostCdcTask(void *param)
             }
             cdcInstance->bulkInMaxPacketSize =
                 USB_HostCdcGetPacketsize(cdcInstance->classHandle, USB_ENDPOINT_BULK, USB_IN);
-            
-            ccid_communication_ready();
             break;
             
         case kUSB_HostCdcRunSetDataInterfaceDone:
@@ -605,6 +606,7 @@ void USB_HostCdcTask(void *param)
             g_AttachFlag          = 1;
             // cdcInstance->runState = kUSB_HostCdcRunGetStateDone;
             cdcInstance->runState = kUSB_HostCdcRunIdle;
+            ccid_communication_ready();
             /*get the class-specific descriptor */
             /*usb_host_cdc_head_function_desc_struct_t *headDesc = NULL;
             usb_host_cdc_call_manage_desc_struct_t *callManage = NULL;
